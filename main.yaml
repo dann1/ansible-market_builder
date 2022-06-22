@@ -1,0 +1,64 @@
+- name: Install market build dependencies
+  hosts: market_builder
+  tasks:
+  - name: Add packer key
+    ansible.builtin.apt_key:
+      url: https://apt.releases.hashicorp.com/gpg
+      state: present
+  - name: Add packer repo
+    ansible.builtin.apt_repository:
+      repo: deb https://apt.releases.hashicorp.com jammy main
+      state: present
+  - name: Install packer
+    ansible.builtin.apt:
+      name: packer
+      update_cache: yes
+  - name: Install built-in packages
+    ansible.builtin.apt:
+      pkg:
+      - qemu-kvm
+      - cloud-utils
+      - gcc
+      - libguestfs0
+      - libguestfs-tools
+      - linux-image-generic
+      - make
+      - ruby-bundler
+      - ruby-dev
+      - ruby
+      - jq
+      state: present
+  - name: Install cangallo
+    ansible.builtin.gem:
+      name: cangallo
+      version: 0.0.8
+      state: present
+  - name: Patch cangallo
+    ansible.builtin.shell: curl https://raw.githubusercontent.com/dann1/cangallo/master/lib/cangallo/qcow2.rb > /root/.local/share/gem/ruby/3.0.0/gems/cangallo-0.0.8/lib/cangallo/qcow2.rb
+
+- name: Install context build dependencies
+  hosts: market_builder
+  tasks:
+    - name: Install built-in packages
+      ansible.builtin.apt:
+        pkg:
+        - mkisofs
+        - git
+        - rpm
+        state: present
+    - name: Install fpm gem
+      ansible.builtin.gem:
+        name: fpm
+        state: present
+
+- name: Clone git repos
+  hosts: market_builder
+  tasks:
+    - name: Clone context
+      ansible.builtin.git:
+        repo: https://github.com/OpenNebula/addon-context-linux.git
+        dest: /root/addon-context-linux
+    # - name: Clone one-infra TODO: Private repo auth
+    #   ansible.builtin.git:
+    #     repo: git@github.com:OpenNebula/one-infra.git
+    #     dest: /root/one-infra

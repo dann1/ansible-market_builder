@@ -1,0 +1,6 @@
+- name: Create VM to use later in inventory for main playbook
+  hosts: supermicro9
+  tasks:
+  - name: Create VM
+    ansible.builtin.shell:
+      onevm create

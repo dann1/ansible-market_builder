@@ -3,4 +3,9 @@
   tasks:
   - name: Create VM
     ansible.builtin.shell:
-      onevm create
+      onevm create --name market_builder --memory 16384 --cpu 1 --vcpu 4 --disk Ubuntu\ 22.04:size=102400:image_uname=dclavijo --net_context --ssh --nic service --raw "CPU_MODEL=[ MODEL="host-passthrough" ]"
+  # TODO: Set static IP in create?
+  - name: Get VM IP
+    ansible.builtin.shell: onevm show market_builder | grep ETH0_IP= | cut -d '=' -f 2 | cut -d '"' -f 2
+    register: market_builder_ip
+  - debug: msg="Update market_builder host in inventory file with the IP {{ market_builder_ip.stdout }}"

@@ -33,12 +33,12 @@
       name: cangallo
       version: 0.0.8
       state: present
+      user_install: no
   - name: Patch cangallo
     ansible.builtin.get_url:
       url: https://raw.githubusercontent.com/dann1/cangallo/master/lib/cangallo/qcow2.rb
-      dest: /root/.local/share/gem/ruby/3.0.0/gems/cangallo-0.0.8/lib/cangallo/qcow2.rb
+      dest: /var/lib/gems/3.0.0/gems/cangallo-0.0.8/lib/cangallo/qcow2.rb
       force: yes
-  #   ansible.builtin.shell: curl https://raw.githubusercontent.com/dann1/cangallo/master/lib/cangallo/qcow2.rb > /root/.local/share/gem/ruby/3.0.0/gems/cangallo-0.0.8/lib/cangallo/qcow2.rb
 
 - name: Install context build dependencies
   hosts: market_builder
@@ -53,7 +53,8 @@
     - name: Install fpm gem
       ansible.builtin.gem:
         name: fpm
-        state: present
+        state: latest
+        user_install: no
 
 - name: Clone git repos
   hosts: market_builder

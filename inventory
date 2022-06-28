@@ -1,8 +1,11 @@
 [market_builder]
-172.20.0.7
+10.0.0.182
+
+[market_builder_devel]
+172.20.0.26
 
 [supermicro9]
 10.0.0.119
 
-[market_builder:vars]
+[market_builder_devel:vars]
 ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q one@supermicro9"'
